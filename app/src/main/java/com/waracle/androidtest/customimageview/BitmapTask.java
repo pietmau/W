@@ -1,11 +1,9 @@
-package com.waracle.androidtest.imageloader;
+package com.waracle.androidtest.customimageview;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
-
-import com.waracle.androidtest.ImageLoader;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -16,6 +14,7 @@ import java.lang.ref.WeakReference;
  */
 public class BitmapTask extends AsyncTask<Void, Void, Bitmap> {
     private final String TAG = getClass().getSimpleName();
+    // Use a WeakReference to avoid memory leaks
     private final WeakReference<ImageView> imageViewReference;
     private final String url;
 

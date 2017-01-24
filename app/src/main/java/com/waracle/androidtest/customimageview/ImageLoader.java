@@ -1,16 +1,14 @@
-package com.waracle.androidtest;
+package com.waracle.androidtest.customimageview;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.text.TextUtils;
-import android.util.Log;
-import android.widget.ImageView;
+
+import com.waracle.androidtest.StreamUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.InvalidParameterException;
 
 /**
  * Created by Riad on 20/05/2015.
