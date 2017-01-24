@@ -31,10 +31,10 @@ public class ImageLoader {
         if (TextUtils.isEmpty(url)) {
             throw new InvalidParameterException("URL is empty!");
         }
-
         // Can you think of a way to improve loading of bitmaps
         // that have already been loaded previously??
 
+        // We should cache them
         try {
             setImageView(imageView, convertToBitmap(loadImageData(url)));
         } catch (IOException e) {
@@ -57,6 +57,10 @@ public class ImageLoader {
             // Can you think of a way to make the entire
             // HTTP more efficient using HTTP headers??
 
+            // We could cache the images, and check the expiry header, if they are not expired we use the cached images.
+            // The headers give us information about the type of data and the size, we could use a buffer to read the file
+            // in chunks rather that byte by byte
+
             return StreamUtils.readUnknownFully(inputStream);
         } finally {
             // Close the input stream if it exists.
@@ -67,11 +71,16 @@ public class ImageLoader {
         }
     }
 
-    private static Bitmap convertToBitmap(byte[] data) {
+    public static Bitmap convertToBitmap(byte[] data) {
         return BitmapFactory.decodeByteArray(data, 0, data.length);
     }
 
     private static void setImageView(ImageView imageView, Bitmap bitmap) {
         imageView.setImageBitmap(bitmap);
+    }
+
+    public static Bitmap getBitmap(String url) throws IOException {
+        byte[] data = loadImageData(url);
+        return BitmapFactory.decodeByteArray(data, 0, data.length);
     }
 }

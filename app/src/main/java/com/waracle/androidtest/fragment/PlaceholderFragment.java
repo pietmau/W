@@ -1,4 +1,4 @@
-package com.waracle.androidtest;
+package com.waracle.androidtest.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,7 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import org.json.JSONArray;
+import com.waracle.androidtest.R;
+import com.waracle.androidtest.adapter.MyAdapter;
+import com.waracle.androidtest.fragment.pojo.Cake;
+
+import java.util.List;
 
 /**
  * Fragment is responsible for loading in some JSON and
@@ -19,14 +23,10 @@ import org.json.JSONArray;
  * Use good coding practices to make code more secure
  */
 public class PlaceholderFragment extends Fragment implements LoadDataTask.Callback {
-    static String JSON_URL = "https://gist.githubusercontent.com/hart88/198f29ec5114a3ec3460/" +
-            "raw/8dd19a88f9b8d24c23d9960f3300d0c917a4f07c/cake.json";
-    private static final String TAG = PlaceholderFragment.class.getSimpleName();
-
     private ListView mListView;
     private MyAdapter mAdapter;
 
-    private static LoadDataTask loadDataTask;
+    private LoadDataTask loadDataTask;
 
     public PlaceholderFragment() { /**/ }
 
@@ -42,7 +42,7 @@ public class PlaceholderFragment extends Fragment implements LoadDataTask.Callba
 
     private void initLoaderTask() {
         if (loadDataTask == null) {
-            loadDataTask = new LoadDataTask(PlaceholderFragment.this);
+            loadDataTask = new LoadDataTask(PlaceholderFragment.this, getActivity().getApplicationContext());
             loadDataTask.execute();
         } else {
             if (loadDataTask.getData() != null) {
@@ -54,6 +54,9 @@ public class PlaceholderFragment extends Fragment implements LoadDataTask.Callba
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // retain this fragment, so that we don't lose the network request (that might be still executing or already completed)
+        // other approaches are available
+        setRetainInstance(true);
     }
 
     private void initAdapter() {
@@ -76,7 +79,7 @@ public class PlaceholderFragment extends Fragment implements LoadDataTask.Callba
     }
 
     @Override
-    public void onJSONArrayDownloaded(JSONArray jsonArray) {
+    public void onJSONArrayDownloaded(List<Cake> jsonArray) {
         mAdapter.setItems(jsonArray);
     }
 }

@@ -1,7 +1,7 @@
 package com.waracle.androidtest.adapter;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,41 +9,32 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.waracle.androidtest.ImageLoader;
 import com.waracle.androidtest.R;
+import com.waracle.androidtest.fragment.pojo.Cake;
+import com.waracle.androidtest.imageloader.AsyncDrawable;
+import com.waracle.androidtest.imageloader.BitmapTask;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
-class MyAdapter extends BaseAdapter {
+public class MyAdapter extends BaseAdapter {
 
-    // Can you think of a better way to represent these items???
-    private JSONArray mItems;
-    private ImageLoader mImageLoader;
+    // TODO Can you think of a better way to represent these items???
+    // the best thing to do would be to use a list of Cakes
+    private List<Cake> mItems;
 
     public MyAdapter() {
-        this(new JSONArray());
-    }
-
-    public MyAdapter(JSONArray items) {
-        mItems = items;
-        mImageLoader = new ImageLoader();
+        mItems = new ArrayList<>();
     }
 
     @Override
     public int getCount() {
-        return mItems.length();
+        return mItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        try {
-            return mItems.getJSONObject(position);
-        } catch (JSONException e) {
-            Log.e("", e.getMessage());
-        }
-        return null;
+        return mItems.get(position);
     }
 
     @Override
@@ -60,23 +51,52 @@ class MyAdapter extends BaseAdapter {
             TextView title = (TextView) root.findViewById(R.id.title);
             TextView desc = (TextView) root.findViewById(R.id.desc);
             ImageView image = (ImageView) root.findViewById(R.id.image);
-            try {
-                JSONObject object = (JSONObject) getItem(position);
-                title.setText(object.getString("title"));
-                desc.setText(object.getString("desc"));
-                mImageLoader.load(object.getString("image"), image);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
 
+            Cake cake = (Cake) getItem(position);
+            title.setText(cake.getTitle());
+            desc.setText(cake.getDesc());
+            loadBitmap(cake.getImage(), image);
+
+        }
         return root;
     }
 
-    public void setItems(JSONArray items) {
-        mItems = items;
+    public void setItems(List<Cake> items) {
+        mItems.clear();
+        mItems.addAll(items);
         notifyDataSetChanged();
     }
 
+    public void loadBitmap(String url, ImageView imageView) {
+        if (cancelPotentialWork(url, imageView)) {
+            BitmapTask task = new BitmapTask(imageView, url);
+            AsyncDrawable asyncDrawable = new AsyncDrawable(task);
+            imageView.setImageDrawable(asyncDrawable);
+            task.execute();
+        }
+    }
 
+    public static boolean cancelPotentialWork(String data, ImageView imageView) {
+        final BitmapTask task = getBitmapTask(imageView);
+        if (task != null) {
+            final String bitmapData = task.getUrl();
+            if (bitmapData == null || bitmapData.equalsIgnoreCase(data)) {
+                task.cancel(true);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static BitmapTask getBitmapTask(ImageView imageView) {
+        if (imageView != null) {
+            final Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+                return asyncDrawable.getBitmapWorkerTask();
+            }
+        }
+        return null;
+    }
 }
