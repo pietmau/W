@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    /** TODO If user selects refresh nothing happens */
+    /** TODO If user selects refresh something should happen */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

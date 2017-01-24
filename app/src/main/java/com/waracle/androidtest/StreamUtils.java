@@ -12,11 +12,10 @@ import java.util.ArrayList;
  * Created by Riad on 20/05/2015.
  */
 public class StreamUtils {
+    private static final String TAG = StreamUtils.class.getSimpleName();
 
     private StreamUtils() {
     }
-
-    private static final String TAG = StreamUtils.class.getSimpleName();
 
     // Can you see what's wrong with this???
     // Possible Null Pointer Exception, add @NonNull and refactor calling code
@@ -31,13 +30,11 @@ public class StreamUtils {
             }
             data.add((byte) result);
         }
-
         // Convert ArrayList<Byte> to byte[]
         byte[] bytes = new byte[data.size()];
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = data.get(i);
         }
-
         // Return the raw byte array.
         return bytes;
     }
@@ -50,5 +47,24 @@ public class StreamUtils {
                 Log.e(TAG, e.getMessage());
             }
         }
+    }
+
+    /**
+     * Returns the charset specified in the Content-Type of this header,
+     * or the HTTP default (ISO-8859-1) if none can be found.
+     */
+    public static String parseCharset(String contentType) {
+        if (contentType != null) {
+            String[] params = contentType.split(",");
+            for (int i = 1; i < params.length; i++) {
+                String[] pair = params[i].trim().split("=");
+                if (pair.length == 2) {
+                    if (pair[0].equals("charset")) {
+                        return pair[1];
+                    }
+                }
+            }
+        }
+        return "UTF-8";
     }
 }

@@ -17,30 +17,7 @@ import java.security.InvalidParameterException;
  */
 public class ImageLoader {
 
-    private static final String TAG = ImageLoader.class.getSimpleName();
-
-    public ImageLoader() { /**/ }
-
-    /**
-     * Simple function for loading a bitmap image from the web
-     *
-     * @param url       image url
-     * @param imageView view to set image too.
-     */
-    public void load(String url, ImageView imageView) {
-        if (TextUtils.isEmpty(url)) {
-            throw new InvalidParameterException("URL is empty!");
-        }
-        // Can you think of a way to improve loading of bitmaps
-        // that have already been loaded previously??
-
-        // We should cache them
-        try {
-            setImageView(imageView, convertToBitmap(loadImageData(url)));
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
-        }
-    }
+    private ImageLoader() { /**/ }
 
     private static byte[] loadImageData(String url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -54,8 +31,7 @@ public class ImageLoader {
                 inputStream = connection.getErrorStream();
             }
 
-            // Can you think of a way to make the entire
-            // HTTP more efficient using HTTP headers??
+            // TODO Can you think of a way to make the entire HTTP more efficient using HTTP headers??
 
             // We could cache the images, and check the expiry header, if they are not expired we use the cached images.
             // The headers give us information about the type of data and the size, we could use a buffer to read the file
@@ -69,14 +45,6 @@ public class ImageLoader {
             // Disconnect the connection
             connection.disconnect();
         }
-    }
-
-    public static Bitmap convertToBitmap(byte[] data) {
-        return BitmapFactory.decodeByteArray(data, 0, data.length);
-    }
-
-    private static void setImageView(ImageView imageView, Bitmap bitmap) {
-        imageView.setImageBitmap(bitmap);
     }
 
     public static Bitmap getBitmap(String url) throws IOException {

@@ -1,9 +1,9 @@
 package com.waracle.androidtest.fragment.pojo;
 
 public class Cake {
-    private String title;
-    private String desc;
-    private String image;
+    private final String title;
+    private final String desc;
+    private final String image;
 
     public Cake(String title, String desc, String image) {
         this.title = title;
@@ -15,23 +15,12 @@ public class Cake {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDesc() {
         return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
     }
 
     public String getImage() {
         return image;
     }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
 }

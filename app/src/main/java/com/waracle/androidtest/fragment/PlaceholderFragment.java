@@ -45,8 +45,8 @@ public class PlaceholderFragment extends Fragment implements LoadDataTask.Callba
             loadDataTask = new LoadDataTask(PlaceholderFragment.this, getActivity().getApplicationContext());
             loadDataTask.execute();
         } else {
-            if (loadDataTask.getData() != null) {
-                onJSONArrayDownloaded(loadDataTask.getData());
+            if (loadDataTask.getCakes() != null) {
+                onCakesDownloaded(loadDataTask.getCakes());
             }
         }
     }
@@ -79,7 +79,7 @@ public class PlaceholderFragment extends Fragment implements LoadDataTask.Callba
     }
 
     @Override
-    public void onJSONArrayDownloaded(List<Cake> jsonArray) {
-        mAdapter.setItems(jsonArray);
+    public void onCakesDownloaded(List<Cake> cakes) {
+        mAdapter.setItems(cakes);
     }
 }

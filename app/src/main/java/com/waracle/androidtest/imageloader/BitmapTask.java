@@ -10,13 +10,16 @@ import com.waracle.androidtest.ImageLoader;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+/**
+ * Another AsyncTask unfortunately.
+ * We use it to get the bitmaps.
+ */
 public class BitmapTask extends AsyncTask<Void, Void, Bitmap> {
     private final String TAG = getClass().getSimpleName();
     private final WeakReference<ImageView> imageViewReference;
     private final String url;
 
     public BitmapTask(ImageView imageView, String url) {
-        // Use a WeakReference to ensure the ImageView can be garbage collected
         imageViewReference = new WeakReference<ImageView>(imageView);
         this.url = url;
     }

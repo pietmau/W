@@ -20,7 +20,7 @@ import java.util.List;
 public class MyAdapter extends BaseAdapter {
 
     // TODO Can you think of a better way to represent these items???
-    // the best thing to do would be to use a list of Cakes
+    // use a list of Cakes
     private List<Cake> mItems;
 
     public MyAdapter() {
@@ -42,6 +42,7 @@ public class MyAdapter extends BaseAdapter {
         return 0;
     }
 
+    // We should be using a ViewHolder (and a RecyclerView)
     @SuppressLint("ViewHolder")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -51,12 +52,10 @@ public class MyAdapter extends BaseAdapter {
             TextView title = (TextView) root.findViewById(R.id.title);
             TextView desc = (TextView) root.findViewById(R.id.desc);
             ImageView image = (ImageView) root.findViewById(R.id.image);
-
             Cake cake = (Cake) getItem(position);
             title.setText(cake.getTitle());
             desc.setText(cake.getDesc());
             loadBitmap(cake.getImage(), image);
-
         }
         return root;
     }
@@ -67,7 +66,8 @@ public class MyAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void loadBitmap(String url, ImageView imageView) {
+    // Start a task that loads the bitmap and store the task in the drawable itself
+    private void loadBitmap(String url, ImageView imageView) {
         if (cancelPotentialWork(url, imageView)) {
             BitmapTask task = new BitmapTask(imageView, url);
             AsyncDrawable asyncDrawable = new AsyncDrawable(task);
@@ -76,7 +76,9 @@ public class MyAdapter extends BaseAdapter {
         }
     }
 
-    public static boolean cancelPotentialWork(String data, ImageView imageView) {
+    // We retrieve the ongoing task from the ImageView and cancel it if it's no longer
+    // relevant
+    private static boolean cancelPotentialWork(String data, ImageView imageView) {
         final BitmapTask task = getBitmapTask(imageView);
         if (task != null) {
             final String bitmapData = task.getUrl();
@@ -89,6 +91,7 @@ public class MyAdapter extends BaseAdapter {
         return true;
     }
 
+    // We retrieve the task
     private static BitmapTask getBitmapTask(ImageView imageView) {
         if (imageView != null) {
             final Drawable drawable = imageView.getDrawable();
