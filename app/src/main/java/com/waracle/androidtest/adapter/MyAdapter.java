@@ -59,6 +59,9 @@ public class MyAdapter extends BaseAdapter {
     }
 
     public void setItems(List<Cake> items) {
+        if (items == null) {
+            return;
+        }
         mItems.clear();
         mItems.addAll(items);
         notifyDataSetChanged();

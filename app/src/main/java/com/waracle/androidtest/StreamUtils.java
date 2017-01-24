@@ -18,10 +18,14 @@ public class StreamUtils {
     }
 
     // Can you see what's wrong with this???
-    // Possible Null Pointer Exception, add @NonNull and refactor calling code
+    // Possible Null Pointer Exception
 
-    public static byte[] readUnknownFully(@NonNull InputStream stream) throws IOException {
+    public static byte[] readUnknownFully(InputStream stream) throws IOException {
         // Read in stream of bytes
+        byte[] bytes = new byte[0];
+        if (stream == null) {
+            return bytes;
+        }
         ArrayList<Byte> data = new ArrayList<>();
         while (true) {
             int result = stream.read();
@@ -31,7 +35,7 @@ public class StreamUtils {
             data.add((byte) result);
         }
         // Convert ArrayList<Byte> to byte[]
-        byte[] bytes = new byte[data.size()];
+        bytes = new byte[data.size()];
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = data.get(i);
         }
