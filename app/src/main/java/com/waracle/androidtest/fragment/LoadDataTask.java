@@ -45,8 +45,8 @@ class LoadDataTask extends AsyncTask<Object, Object, List<Cake>> {
 
     @Override
     protected List<Cake> doInBackground(Object... voids) {
-        HttpURLConnection urlConnection = null;
-        URL url = null;
+        HttpURLConnection urlConnection;
+        URL url;
         try {
             url = new URL(JSON_URL);
         } catch (MalformedURLException e) {

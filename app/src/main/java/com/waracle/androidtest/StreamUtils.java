@@ -1,6 +1,5 @@
 package com.waracle.androidtest;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.Closeable;

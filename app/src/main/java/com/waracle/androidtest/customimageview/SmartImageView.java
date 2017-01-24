@@ -2,11 +2,17 @@ package com.waracle.androidtest.customimageview;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.LruCache;
 import android.widget.ImageView;
 
+/**
+ * A simple ImageView that loads its content asynchronously
+ */
 public class SmartImageView extends ImageView {
+
     public SmartImageView(Context context) {
         super(context);
     }
@@ -20,9 +26,9 @@ public class SmartImageView extends ImageView {
     }
 
     // Start a task that loads the bitmap and store the task in the drawable itself
-    public void loadBitmap(String url) {
+    public void loadBitmap(String url, LruCache<String, Bitmap> lruCache) {
         if (cancelTaskIfUrlNotLongerRelevant(url)) {
-            BitmapTask task = new BitmapTask(SmartImageView.this, url);
+            BitmapTask task = new BitmapTask(SmartImageView.this, url, lruCache);
             AsyncDrawable asyncDrawable = new AsyncDrawable(task);
             setImageDrawable(asyncDrawable);
             task.execute();

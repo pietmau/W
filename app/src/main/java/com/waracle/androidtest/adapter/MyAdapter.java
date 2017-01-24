@@ -1,11 +1,12 @@
 package com.waracle.androidtest.adapter;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.waracle.androidtest.R;
@@ -20,8 +21,10 @@ public class MyAdapter extends BaseAdapter {
     // TODO Can you think of a better way to represent these items???
     // Use a list of Cakes
     private List<Cake> mItems;
+    private final LruCache<String, Bitmap> lruCache;
 
-    public MyAdapter() {
+    public MyAdapter(LruCache<String, Bitmap> lruCache) {
+        this.lruCache = lruCache;
         mItems = new ArrayList<>();
     }
 
@@ -53,7 +56,7 @@ public class MyAdapter extends BaseAdapter {
             Cake cake = (Cake) getItem(position);
             title.setText(cake.getTitle());
             desc.setText(cake.getDesc());
-            smartImageView.loadBitmap(cake.getImage());
+            smartImageView.loadBitmap(cake.getImage(), lruCache);
         }
         return root;
     }
@@ -66,4 +69,5 @@ public class MyAdapter extends BaseAdapter {
         mItems.addAll(items);
         notifyDataSetChanged();
     }
+
 }

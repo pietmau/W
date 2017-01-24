@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.ListView;
 
 import com.waracle.androidtest.R;
 import com.waracle.androidtest.adapter.MyAdapter;
+import com.waracle.androidtest.customimageview.StringBitmapLruCache;
 import com.waracle.androidtest.fragment.pojo.Cake;
 
 import java.util.List;
@@ -25,8 +27,8 @@ import java.util.List;
 public class PlaceholderFragment extends Fragment implements LoadDataTask.Callback {
     private ListView mListView;
     private MyAdapter mAdapter;
-
     private LoadDataTask loadDataTask;
+    private StringBitmapLruCache lruCache;
 
     public PlaceholderFragment() { /**/ }
 
@@ -55,13 +57,21 @@ public class PlaceholderFragment extends Fragment implements LoadDataTask.Callba
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // retain this fragment, so that we don't lose the network request (that might be still executing or already completed)
-        // other approaches are available
+        // other approaches are available. We can save the view state in the Bundle, but the ongoing network call if not completed
+        // will be lost, and we will ned to redo it.
         setRetainInstance(true);
     }
 
     private void initAdapter() {
-        mAdapter = new MyAdapter();
+        mAdapter = new MyAdapter(getCache());
         mListView.setAdapter(mAdapter);
+    }
+
+    private LruCache getCache() {
+        if (lruCache == null) {
+            lruCache = new StringBitmapLruCache((int) (Runtime.getRuntime().maxMemory() / 1024) / 8);
+        }
+        return lruCache;
     }
 
     @Override
